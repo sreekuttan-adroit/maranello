@@ -1,0 +1,150 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<div class="container">
+	<div class="block-section">
+		{% unless section.settings.hide_heading %}
+			<h1 class="page-title">
+				{{ page.title | escape }}
+			</h1>
+		{% endunless %}
+
+		{%- if page.content -%}
+			<div class="rte page-content">
+				{{ page.content }}
+			</div>
+		{%- endif -%}
+
+		{% if section.blocks %}
+			<div class="brands-blocks-wrapper grid grid-1-col grid-2-col grid-4-col-tablet
+			grid-{{ section.settings.columns }}-col-desktop"
+			>
+				{% for block in section.blocks %}
+					{% liquid
+						assign target_image = block.settings.collection.featured_image
+
+						assign ratio = 1
+						if target_image and section.settings.image_ratio == 'portrait'
+							assign ratio = 0.75
+						elsif target_image and section.settings.image_ratio == 'landscape'
+							assign ratio = 1.77
+						elsif target_image and section.settings.image_ratio == 'adapt'
+							assign ratio = target_image.aspect_ratio
+						endif
+						if ratio == 0 or ratio == nil
+							assign ratio = 1
+						endif
+					%}
+
+					<div class="grid-item" {{ block.shopify_attributes }}>
+						{%- case block.type -%}
+							{% when 'brand' %}
+								<div class="card card-simple">
+									<figure class="card-media card-justify-center color-background-2">
+										<a href="{{ block.settings.collection.url }}">
+											{% if target_image %}
+												{% if ratio != 0 %}
+													<div class="aspect-ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+												{% endif %}
+													{{ target_image | image_url: width: 950 | image_tag:
+														loading: 'lazy',
+														widths: '250, 450, 650, 750, 950',
+														sizes: '(min-width: 1200px) 420px, (min-width: 990px) calc((100vw - 4rem - 3rem) / 3), calc(100vw - 3rem - 1rem)',
+														class: 'card-media-image'
+													}}
+												{% if ratio != 0 %}
+													</div>
+												{% endif %}
+											{% else %}
+												{% capture placeholder %}
+													{% cycle 'collection-1', 'collection-2', 'collection-3', 'collection-4' , 'collection-5' , 'collection-6' %}
+												{% endcapture %}
+												{{ placeholder | strip | placeholder_svg_tag }}
+											{% endif %}
+										</a>
+									</figure>
+
+									{%- if block.settings.collection.title and section.settings.show_title -%}
+										<h3 class="card-heading">
+											<a href="{{ block.settings.collection.url }}">
+												{{ block.settings.collection.title }}
+											</a>
+										</h3>
+									{%- endif -%}
+								</div>
+						{% endcase %}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main_page_brands.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_heading",
+      "default": false,
+      "label": "t:sections.main_page_brands.settings.hide_heading.label"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 6,
+      "label": "t:sections.all.layout.columns.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_page_brands.settings.header_1.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:sections.all.layout.image_ratio.label",
+      "default": "adapt",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.all.layout.image_ratio.options.label_1"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.all.layout.image_ratio.options.label_2"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.all.layout.image_ratio.options.label_3"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.all.layout.image_ratio.options.label_4"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "default": true,
+      "label": "t:sections.main_page_brands.settings.show_title.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "t:sections.main_page_brands.blocks.brand.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.main_page_brands.blocks.brand.settings.collection.label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

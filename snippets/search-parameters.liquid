@@ -1,0 +1,18 @@
+{% comment %}
+	Renders the hidden search form fields.
+
+	Accepts:
+	- form: {String} Optional. Form element ID
+
+	Usage:
+	{% render 'search-parameters', form: 'FacetsFilterForm' %}
+{% endcomment %}
+
+{%- capture result_types -%}
+	product
+	{%- if settings.search_page_articles -%},article{%- endif -%}
+	{%- if settings.search_page_pages -%},page{%- endif -%}
+{%- endcapture -%}
+<input type="hidden" name="options[prefix]" value="last" {% if form != blank %}form="{{ form }}"{% endif %}>
+<input type="hidden" name="type" value="{{ result_types }}" {% if form != blank %}form="{{ form }}"{% endif %}>
+<input type="hidden" name="options[unavailable_products]" value="{{ settings.predictive_search_unavailable }}" {% if form != blank %}form="{{ form }}"{% endif %}>

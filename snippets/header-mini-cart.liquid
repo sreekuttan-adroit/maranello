@@ -1,0 +1,45 @@
+{% comment %}
+	Renders the header's mini cart
+
+	Usage:
+	{% render 'header-mini-cart' %}
+{% endcomment %}
+
+{{ 'component-drawer.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-header-mini-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'component-header-mini-cart.css' | asset_url | stylesheet_tag }}</noscript>
+
+<mini-cart data-event-context="MiniCart">
+	<header-mini-cart-dropdown-modal id="HeaderMiniCart" class="dropdown-modal" body-class="header-mini-cart-open" role="dialog" aria-modal="true" aria-label="{{ 'sections.minicart.title' | t }}" {% if template == 'cart' %}prevent-open="true"{% endif %} data-event-prefix="header-cart">
+		<a href="{{ routes.cart_url }}" class="head-slot-cart-link dropdown-modal-toggle">
+			<span class="visually-hidden">{{ 'sections.minicart.open' | t }}</span>
+			{% render 'icons', icon: section.settings.mini_cart_icon %}
+			{%- if cart != empty -%}
+				<span class="head-slot-cart-link-quantity">{{ cart.item_count }}</span>
+			{%- endif -%}
+		</a>
+
+		<div class="mini-cart-wrap color-background-2">
+			<form action="{{ routes.cart_url }}" method="post" class="mini-cart-inner">
+				<div class="mini-cart-header" tabindex="-1">
+					<h4 class="h5">{{ 'sections.minicart.title' | t }}</h4>
+						<button type="button" class="button button-tertiary button-drawer-header-dismiss dropdown-modal-toggle" aria-label="{{ 'accessibility.close' | t }}">
+							&times;
+						</button>
+				</div>
+
+				<div id="header-mini-cart-content" class="mini-cart-content-inner">
+					{% render 'header-mini-cart-content' %}
+				</div>
+
+				<div id="header-mini-cart-footer" class="header-mini-cart-footer">
+					{% render 'header-mini-cart-footer' %}
+				</div>
+			</form>
+		</div>
+	</header-mini-cart-dropdown-modal>
+</mini-cart>

@@ -1,0 +1,115 @@
+{% comment %}
+    Renders the countdown module of the featured collection section.
+
+    Accepts:
+    - heading: {String} Optional. The section's title.
+    - subheading: {String} Optional. The section's subtitle.
+    - link_title: {String} Optional. The section's link title.
+    - link_url: {String} Optional. The section's link URL.
+    - collection: {Object} Optional. The collection.
+    - description: {Object} Optional. Custom collection description.
+    - expiration_date: {Number} The expiration date.
+    - sticky: {Boolean} Whether the module should be sticky.
+    - expiration_message: {String} A message to show to the user on expiry. Optional.
+
+    Usage:
+    {% render 'featured-collection-countdown', heading: heading, collection: collection, expiration_date: expiration_date %}
+{% endcomment %}
+
+{% liquid
+	assign now = 'now' | date: '%s'
+	assign distance = expiration_date | minus: now
+	if distance < 0
+		assign distance = 0
+	endif
+	assign seconds = distance | modulo: 60 | floor
+	assign minutes = distance | divided_by: 60 | modulo: 60 | floor
+	assign hours = distance | divided_by: 3600 | modulo: 24 | floor
+	assign days = distance | divided_by: 86400 | floor
+%}
+
+{{ 'component-countdown.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'countdown.js' | asset_url }}" defer="defer"></script>
+
+<div class="featured-collection-expiry-wrap {% if sticky %}featured-collection-expiry-wrap-sticky{% endif %}">
+	{% if heading != blank or subheading != blank %}
+		<div class="block-block-section-title-wrapper">
+			{% if heading != blank or subheading != blank %}
+				<div class="block-section-title-wrap">
+					{% if heading != blank %}
+						<h2 class="block-section-title">{{ heading }}</h2>
+					{% endif %}
+					{% if subheading != blank %}
+						<p class="block-section-subtitle">{{ subheading }}</p>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+	{% endif %}
+
+	{% unless description == blank and collection.description == blank %}
+		<div class="featured-collection-expiry-description rte">
+			{% if description != blank %}
+				{{ description }}
+			{% else %}
+				{{ collection.description }}
+			{% endif %}
+		</div>
+	{% endunless %}
+
+	{% if expiration_date != blank and distance > 0 %}
+		<countdown-timer date="{{ expiration_date }}" class="no-js-hidden">
+			<div class="countdown">
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-days"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-hours"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-minutes"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-seconds"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+				</div>
+			</div>
+		</countdown-timer>
+
+		<noscript>
+			<div class="countdown">
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ days }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ hours }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ minutes }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ seconds }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+				</div>
+			</div>
+		</noscript>
+	{% endif %}
+
+	{% if expiration_message != blank and distance == 0 %}
+		<div class="featured-collection-countdown-message color-background-2">
+			{{ expiration_message }}
+		</div>
+	{% endif %}
+
+	{% if link_title != blank and link_url != blank %}
+		<a href="{{ link_url }}" class="button button-large-desktop">
+			{{ link_title }}
+		</a>
+	{% endif %}
+</div>

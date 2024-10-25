@@ -1,0 +1,227 @@
+{% comment %}
+    Renders a product card.
+
+    Accepts:
+    - card_product: {Object} Product object
+    - mobile_two_columns: {Boolean} Whether the card is displayed in two columns when on mobile. Default: false
+    - show_vendor: {Boolean} Show the product vendor. Default: false
+    - show_stock: {Boolean} Show the product stock. Default: false
+    - show_rating: {Boolean} Show the product rating. Default: false
+    - show_add_to_cart: {Boolean} Show the Add To Cart button for desktop.
+    - show_add_to_cart_mobile: {Boolean} Show the Add To Cart button for mobile.
+    - render_layout: {String} The layout context where the card is rendered in (slider, media, grid)
+    - event_context: {Object} The JavaScript's cart-item:add event context (the location of the product card).
+    - lazyload: {Boolean} Whether to lazy load the main thumbnail.
+
+    Usage:
+    {% render 'card-product' card_product: product %}
+{% endcomment %}
+
+{%- liquid
+	assign ratio = 1
+	if card_product.featured_media and settings.product_image_ratio == 'portrait'
+		assign ratio = 0.8
+	elsif card_product.featured_media and settings.product_image_ratio == 'landscape'
+		assign ratio = 1.77
+	elsif card_product.featured_media and settings.product_image_ratio == 'adapt'
+		assign ratio = card_product.featured_media.aspect_ratio
+	endif
+	if ratio == 0 or ratio == nil
+		assign ratio = 1
+	endif
+
+	assign is_pre_order = false
+	if card_product.template_suffix == 'pre-order' or card_product.template_suffix == 'pre-order-two-columns'
+		assign is_pre_order = true
+	endif
+
+	assign card_product_media = false
+	if class contains 'card-product-media'
+		assign card_product_media = true
+	endif
+
+	if lazyload == true
+		assign lazy = 'lazy'
+	endif
+-%}
+
+{% if card_product and card_product != empty %}
+	{%- capture image_sizes -%}
+		{% if render_layout == 'media' %}
+			{% if mobile_two_columns %}
+				(min-width: 750px) 185px, calc((100vw - 3rem - 1rem) / 2)
+			{% else %}
+				(min-width: 750px) 185px, calc(100vw - 3rem - 1rem)
+			{% endif %}
+		{% else %}
+			{% if mobile_two_columns %}
+				(min-width: 1200px) 420px, (min-width: 750px) calc((100vw - 4rem - 3rem) / 3), calc((100vw - 3rem - 1rem) / 2)
+			{% else %}
+				(min-width: 1200px) 420px, (min-width: 750px) calc((100vw - 4rem - 3rem) / 3), calc(100vw - 3rem - 1rem)
+			{% endif %}
+		{% endif %}
+	{%- endcapture -%}
+
+	<product-card
+		class="card card-product
+			{% unless card_product.featured_media %} card-no-media{% endunless %}
+			{% unless show_rating %} card-product-no-rating{% endunless %}
+			{% unless settings.products_add_to_cart_animate == false %} card-product-animate-footer{% endunless %}
+			{{ class }}"
+	>
+		{% liquid
+			unless card_product_media
+				render 'card-product-custom-badges', product: card_product, class: 'card-product-badges top right'
+			endunless
+		%}
+
+		{% unless settings.catalog_enabled or settings.sale_badge_mode == 'none' %}
+			{% if card_product.compare_at_price > card_product.price %}
+				<div class="card-badge top right">
+					{% render 'badge-sale', product: card_product, use_variant: false %}
+				</div>
+			{% elsif is_pre_order %}
+				<div class="card-badge top right">
+					<span class="badge badge-sale">
+						{{ 'products.product.pre_order' | t }}
+					</span>
+				</div>
+			{% endif %}
+		{% endunless %}
+
+		<figure class="card-media {% if settings.product_image_crop != true %} card-media-contain{% endif %}">
+			<a href="{{ card_product.url }}" class="js-product-link">
+				{% if card_product.featured_media %}
+					{% if ratio != 0 %}
+						<div class="aspect-ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+					{% endif %}
+
+					{{ card_product.featured_media | image_url: width: 950 | image_tag:
+						class: 'card-media-image',
+						loading: lazy,
+						sizes: image_sizes,
+						widths: '185, 200, 370, 420, 650, 750, 950'
+					}}
+
+					{% assign second_image = card_product.images[1] %}
+					{%- if second_image != nil and settings.products_show_secondary_image -%}
+						{{ second_image | image_url: width: 950 | image_tag:
+							class: 'card-media-image',
+							loading: 'lazy',
+							sizes: image_sizes,
+							widths: '185, 200, 370, 420, 650, 750, 950'
+						}}
+					{%- endif -%}
+					{% if ratio != 0 %}
+						</div>
+					{% endif %}
+				{% endif %}
+			</a>
+		</figure>
+
+		<div class="card-info-wrap">
+			<div class="card-info">
+				{% if show_vendor and card_product.vendor != blank %}
+					{% liquid
+						assign matching_collection = false
+						assign vendor_handle = card_product.vendor | handleize
+						for collection in card_product.collections
+							if collection.handle == vendor_handle
+								assign matching_collection = true
+							endif
+						endfor
+					%}
+					<div class="card-eyebrow">
+						{% if matching_collection %}
+							<a href="{{ routes.collections_url }}/{{ vendor_handle }}">{{ card_product.vendor }}</a>
+						{% else %}
+							{{ card_product.vendor | link_to_vendor }}
+						{% endif %}
+					</div>
+				{% endif %}
+
+				<h3 class="card-heading typography-{{ settings.product_title_font }}">
+					<a href="{{ card_product.url }}" class="js-product-link"> {{ card_product.title | escape }}</a>
+				</h3>
+
+				{% render 'card-product-metafields', product: card_product %}
+
+				{% liquid
+					if card_product_media
+						render 'card-product-custom-badges', product: card_product, class: 'card-product-badges'
+					endif
+				%}
+
+				{% liquid
+					unless settings.catalog_enabled
+						if show_stock
+							render 'product-availability-listing', product: card_product
+						endif
+					endunless
+				%}
+
+				{% if settings.swatches_on_product_listings %}
+					{% render 'card-product-swatches', product: card_product %}
+				{% endif %}
+			</div>
+
+			{% unless settings.catalog_enabled %}
+				<div class="card-footer {% if settings.products_hide_empty_star_rating %}product-rating-hide-empty{% endif %}">
+					{% liquid
+						render 'price', product: card_product, discount_badge: false
+
+						if show_rating
+							render 'product-rating-widget', product: card_product
+						endif
+					%}
+
+					{%- unless settings.products_add_to_cart_animate and render_layout == 'slider' -%}
+						{%- if show_add_to_cart or show_add_to_cart_mobile -%}
+							<div class="card-floating-footer {% if show_add_to_cart == false %}hidden-mobile-up{% endif %} {% if show_add_to_cart_mobile == false %}hidden-mobile{% endif %}">
+								{% render 'card-product-add-to-cart', product: card_product, event_context: event_context %}
+							</div>
+						{%- endif -%}
+					{% endunless %}
+				</div>
+			{% endunless %}
+		</div>
+	</product-card>
+{% else %}
+	<div class="card card-product {% unless should_show_rating %} card-product-no-rating{% endunless %} {{ class }}">
+		<figure class="card-media">
+			<a role="link" aria-disabled="true">
+				{{ 'product-1' | strip | placeholder_svg_tag }}
+			</a>
+		</figure>
+
+		<div class="card-info-wrap">
+			<div class="card-info">
+				{% if show_vendor and card_product.vendor != blank %}
+					<div class="card-eyebrow">{{ 'products.product.vendor' | t }}</div>
+				{% endif %}
+
+				<h3 class="card-heading typography-{{ settings.product_title_font }}">
+					<a role="link" aria-disabled="true">{{ 'onboarding.product_title' | t }}</a>
+				</h3>
+
+				{% unless settings.catalog_enabled %}
+					<div class="badge-stock badge-stock-in">
+						<span class="badge-stock-icon"></span> {{ 'products.product.availability.in_stock' | t }}
+					</div>
+				{% endunless %}
+			</div>
+
+			{% unless settings.catalog_enabled %}
+				<div class="card-footer">
+					{% render 'price', product: card_product, discount_badge: false %}
+
+					{% liquid
+						if show_rating
+							render 'rating', product: card_product
+						endif
+					%}
+				</div>
+			{% endunless %}
+		</div>
+	</div>
+{% endif %}

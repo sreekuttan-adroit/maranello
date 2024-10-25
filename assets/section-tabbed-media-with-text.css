@@ -1,0 +1,103 @@
+/* Section - Tabbed media with text
+=================================== */
+
+.tabbed-media-with-text-tabs-navigation-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 3.5rem;
+}
+
+.tabbed-media-with-text-container tabs-navigation {
+	display: block;
+	position: relative;
+	border-top: 0.1rem solid var(--color-border);
+}
+
+.tabbed-media-with-text-container .tab-nav {
+	grid-gap: 2rem;
+	border-top: 0;
+	margin-top: -2px;
+	overflow-x: auto;
+	padding: 2px 0 10px 2px;
+}
+
+.tabbed-media-with-text-container .tab-nav-item {
+	min-height: 44px;
+	margin-top: -1px;
+	padding: 2.5rem 0.25rem 0;
+	background: none;
+}
+
+.tabbed-media-with-text-container .tab-nav-item::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	height: 2px;
+	width: 0;
+	left: 0;
+	background: currentColor;
+	transition: width .36s ease;
+}
+
+.tabbed-media-with-text-container .tab-nav-item.is-active::before {
+	width: calc(100% + 2px)
+}
+
+.tabbed-media-with-text-container .tab-nav-item::after {
+	content: "";
+	position: absolute;
+	top: -100%;
+	left: 50%;
+	height: 30px;
+	width: 30px;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: translateX(calc(-50% + 1px)) rotate(34deg) skew(-24deg);
+	background: rgb(var(--color-background));
+	transition: top .18s ease;
+}
+
+.tabbed-media-with-text-container .tab-nav-item.is-active::after {
+	top: -24px;
+}
+
+@media (min-width: 990px)  {
+	.tabbed-media-with-text-container .tab-nav {
+		grid-gap: 3rem;
+	}
+}
+
+.tabbed-media-with-text-container .media-with-text {
+	padding: 0;
+	box-shadow: none;
+	background: none;
+}
+
+.tabbed-media-with-text-container .media-with-text-grid  {
+	grid-gap: 2rem;
+}
+
+.tabbed-media-with-text-container .media-with-text-text-item {
+	flex: auto;
+	padding: 2.5rem;
+}
+
+.color-background-2 .tabbed-media-with-text-container .media-with-text-text-item {
+	box-shadow: inset 0 0 0 0.1rem rgb(var(--color-card-border));
+}
+
+@media (min-width: 750px) {
+	.tabbed-media-with-text-container .media-with-text-text-item {
+		width: calc(50% - 1rem);
+	}
+
+	.tabbed-media-with-text-container .media-with-text-media-item {
+		width: calc(50% - 1rem);
+	}
+}
+
+@media (min-width: 990px) {
+	.tabbed-media-with-text-container .media-with-text-text-item {
+		padding: 4.5rem;
+	}
+}

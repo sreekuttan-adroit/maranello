@@ -1,0 +1,9 @@
+/* Section - Multicolumn
+=================================== */
+.multicolumn .center {
+  text-align: center;
+}
+
+.multicolumn-call-to-action {
+  margin-top: 4rem;
+}

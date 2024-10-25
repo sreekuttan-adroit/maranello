@@ -1,0 +1,127 @@
+{% comment %}
+	Renders the site's main mega menu
+
+	Accepts:
+	- menu: {Object} The menu (linklist) object.
+	- color_scheme: {String} The color scheme of the menu.
+	- button_label: {String} The button's label.
+	- side_item_image: {Image} Optional. The side item's image.
+	- side_item_title: {String} Optional. The side item's title.
+	- side_item_text: {String} Optional. The side item's text.
+	- side_item_url: {String} Optional. The side item's link url.
+
+	Usage:
+	{% render 'mega-menu', menu: menu_secondary, button_label: "Browse categories" %}
+{% endcomment %}
+
+{% if menu != blank %}
+	{% liquid
+		assign side_item_visible = false
+		if side_item_image != blank or side_item_title != blank or side_item_text != blank
+			assign side_item_visible = true
+		endif
+	%}
+	<mega-menu-main aria-expanded="false">
+		<button class="button button-mega-menu-toggle">
+			{{ button_label | escape }} {% render 'icon-angle' %}
+		</button>
+
+		<div class="mega-menu-main-wrapper {% if side_item_visible %}mega-menu-side-item-visible{% endif %} color-{{ color_scheme }}" aria-hidden="true">
+			<div class="container">
+				<div class="mega-menu-main-container navigation-sub-menu">
+					<div class="mega-menu-main-nav">
+						{%- for link in menu.links -%}
+							<a
+								href="#MegaMenuContent{{ forloop.index0 }}"
+								class="mega-menu-main-nav-item
+								{% if forloop.index0 == 0 or link.current %}current{% endif %}">
+								{{ link.title | escape }}
+								{% render 'icon-angle' %}
+							</a>
+						{%- endfor -%}
+					</div>
+
+					<div class="mega-menu-main-content-wrapper">
+						<div class="mega-menu-main-content">
+							{%- for link in menu.links -%}
+								<div id="MegaMenuContent{{ forloop.index0 }}" class="mega-menu-main-content-tab" aria-hidden="{% if forloop.index0 == 0 %}false{% else %}true{% endif %}">
+									<div class="mega-menu-container">
+										<div class="mega-menu-columns">
+											{%- for childlink in link.links -%}
+												<div class="mega-menu-column">
+													<a
+														href="{{ childlink.url }}"
+														class="mega-menu-column-title"
+														{% if childlink.current %} aria-current="page"{% endif %}
+													>
+														{{ childlink.title | escape }}
+													</a>
+
+													{%- if childlink.links != blank -%}
+														<ul class="mega-menu-column-list">
+															{%- for grandchildlink in childlink.links -%}
+																<li class="navigation-item">
+																	<a
+																		href="{{ grandchildlink.url }}"
+																		{% if grandchildlink.current %} aria-current="page" class="current"{% endif %}
+																	>
+																		{{ grandchildlink.title | escape }}
+																	</a>
+																</li>
+															{%- endfor -%}
+														</ul>
+													{%- endif -%}
+												</div>
+											{%- endfor -%}
+										</div>
+									</div>
+								</div>
+							{%- endfor -%}
+						</div>
+
+						{% if side_item_visible %}
+							<div class="mega-menu-main-column-feature-wrap">
+								<div class="mega-menu-column-feature">
+								{% if side_item_url != blank %}
+									<a href="{{ side_item_url }}">
+								{% endif %}
+
+										<div class="mega-menu-feature">
+											{% if side_item_image != blank %}
+												{{ side_item_image | image_url: width: 750 | image_tag:
+													class: 'mega-menu-feature-media',
+													loading: 'lazy',
+													widths: '200, 420, 650, 750',
+													sizes: 'calc((100vw - 3rem - 1rem) / 5)'
+												}}
+											{% endif %}
+
+											{% if side_item_title != blank or side_item_text != blank %}
+												<div class="mega-menu-feature-content color-background-2">
+													{% if side_item_title != blank %}
+														<p class="mega-menu-feature-heading h5">
+															{{ side_item_title }}
+														</p>
+													{% endif %}
+
+													{% if side_item_text != blank %}
+														<div class="mega-menu-feature-text">
+															{{ side_item_text }}
+														</div>
+													{% endif %}
+												</div>
+											{% endif %}
+										</div>
+
+									{% if side_item_url %}
+									</a>
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</mega-menu-main>
+{% endif %}

@@ -1,0 +1,145 @@
+/* Component - Pickup Availability
+=================================== */
+.product-pickup-availabilities {
+  display: block;
+}
+
+.pickup-availability-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.product-info .pickup-availability-preview {
+  padding-top: 3.5rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 4rem;
+}
+
+.pickup-availability-preview .status-dot {
+  position: relative;
+  top: 0.1rem;
+}
+
+.pickup-availability-button {
+  padding: 0;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.pickup-availability-info {
+  font-size: calc(var(--font-body-scale) * 1.4rem);
+}
+
+.pickup-availability-info > * {
+  margin-bottom: 0;
+}
+
+.pickup-availability-title {
+  font-size: calc(var(--font-body-scale) * 1.6rem);
+}
+
+.pickup-availability-title-location {
+  font-weight: var(--font-bolder-weight);
+}
+
+.pickup-availability-time {
+  font-size: calc(var(--font-body-scale) * 1.4rem);
+}
+
+/* Pickup Availability Drawer
+=================================== */
+.pickup-availability-drawer {
+  z-index: 1000;
+  will-change: transform;
+}
+
+.pickup-availability-drawer-open .pickup-availability-drawer {
+  transform: translateX(0);
+}
+
+.pickup-availability-variant {
+  margin-top: -1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.pickup-availability-list-item {
+  display: flex;
+  align-items: flex-start;
+  grid-gap: 1rem;
+  font-size: calc(var(--font-body-scale) * 1.4rem);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+}
+
+.pickup-availability-list-item-content > * {
+  margin-bottom: 0;
+}
+
+.pickup-availability-list-item-content :last-child {
+  margin-bottom: 0;
+}
+
+.pickup-availability-list-item-content .pickup-availability-preview {
+  margin-bottom: 1rem;
+}
+
+.pickup-availability-list-item-title {
+  font-size: calc(var(--font-body-scale) * 1.5rem);
+}
+
+.pickup-availability-status-icon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+}
+
+.pickup-availability-status-icon svg {
+  width: 100%;
+  height: 100%;
+  flex: none;
+}
+
+.pickup-availability-status-icon svg path {
+  fill: rgba(var(--color-foreground), .35);
+}
+
+/* Status dots
+=================================== */
+.status-dot {
+  width: 1.9rem;
+  height: 1.9rem;
+  background: rgba(var(--color-foreground), 0.3);
+  color: rgba(var(--color-foreground), 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  line-height: 0;
+  flex: none;
+}
+
+.status-dot::after {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-dot-success {
+  background: var(--color-success-background);
+  color: var(--color-success);
+}
+
+.status-dot-error {
+  background: var(--color-error-background);
+  color: var(--color-error);
+}
+
+.status-dot-warning {
+  background: var(--color-warning-background);
+  color: var(--color-warning);
+}

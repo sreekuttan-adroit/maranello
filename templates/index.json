@@ -1,0 +1,461 @@
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "settings": {
+        "full_width": true,
+        "slide_height": "medium",
+        "auto_rotate": true,
+        "animation_type": "fade",
+        "navigation_type_desktop": "slide",
+        "spacing_top": 0,
+        "spacing_bottom": 0
+      },
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide-2",
+        "slide-3"
+      ]
+    },
+    "features-0": {
+      "type": "features",
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": false,
+        "size": "small",
+        "color_scheme": "accent-1",
+        "spacing_top": 10,
+        "spacing_bottom": 10
+      },
+      "blocks": {
+        "feature-0-0": {
+          "type": "feature",
+          "settings": {
+            "icon": "truck",
+            "title": "Same-day shipping, daily.",
+            "text": ""
+          }
+        },
+        "feature-0-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "activity",
+            "title": "Price protection.",
+            "text": ""
+          }
+        },
+        "feature-0-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "returns",
+            "title": "Free returns.",
+            "text": ""
+          }
+        },
+        "feature-0-3": {
+          "type": "feature",
+          "settings": {
+            "icon": "percent",
+            "title": "Weekly special offers.",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature-0-0",
+        "feature-0-1",
+        "feature-0-2",
+        "feature-0-3"
+      ]
+    },
+    "filters": {
+      "type": "filters",
+      "settings": {
+        "full_width": true,
+        "heading": "Search for products using filters"
+      },
+      "blocks": {
+        "filter-0-0": {
+          "type": "filter",
+          "settings": {
+            "title": "Width",
+            "placeholder": "Width",
+            "tooltip": "Select the tire width in millimeters."
+          }
+        },
+        "filter-0-1": {
+          "type": "filter",
+          "settings": {
+            "title": "Rim Size",
+            "placeholder": "Rim size",
+            "tooltip": "Pick the wheel diameter in inches."
+          }
+        },
+        "filter-0-2": {
+          "type": "filter",
+          "settings": {
+            "title": "Profile",
+            "placeholder": "Profile",
+            "tooltip": "Choose the tire's aspect ratio."
+          }
+        }
+      },
+      "block_order": [
+        "filter-0-0",
+        "filter-0-1",
+        "filter-0-2"
+      ]
+    },
+    "featured-collections": {
+      "type": "featured-collections",
+      "settings": {
+        "heading": "Shop by category",
+        "link_title": "All categories",
+        "link_url": "shopify://collections/all",
+        "card_type": "overlay"
+      },
+      "blocks": {
+        "featured-collection-0-0": {
+          "type": "featured_collection",
+          "settings": {
+          }
+        },
+        "featured-collection-0-1": {
+          "type": "featured_collection",
+          "settings": {
+          }
+        },
+        "featured-collection-0-2": {
+          "type": "featured_collection",
+          "settings": {
+          }
+        },
+        "featured-collection-0-3": {
+          "type": "featured_collection",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "featured-collection-0-0",
+        "featured-collection-0-1",
+        "featured-collection-0-2",
+        "featured-collection-0-3"
+      ]
+    },
+    "banner-list": {
+      "type": "banner-list",
+      "settings": {
+        "heading": ""
+      },
+      "blocks": {
+        "banner-0": {
+          "type": "banner",
+          "settings": {
+            "button_text": "Get in touch",
+            "button_link": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "banner-0"
+      ]
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "products_to_show": 8,
+        "heading": "Deals of the week",
+        "link_url": "",
+        "show_countdown": true,
+        "sticky_countdown": true,
+        "hide_on_expiry": false
+     }
+    },
+    "tabbed-collection-lists": {
+      "type": "tabbed-collection-lists",
+      "settings": {
+        "heading": "Tabbed Categories"
+      },
+      "blocks": {
+        "tabbed-collection-list-0-0": {
+          "type": "collection_list",
+          "settings": {
+          }
+        },
+        "tabbed-collection-list-0-1": {
+          "type": "collection_list",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "tabbed-collection-list-0-0",
+        "tabbed-collection-list-0-1"
+      ]
+    },
+    "collection-list": {
+      "type": "collection-list",
+      "settings": {
+        "heading": "Collection List",
+        "link_url": "",
+        "card_type": "overlay",
+        "color_scheme": "accent-2"
+      },
+      "blocks": {
+        "collection-list-0-0": {
+          "type": "collection",
+          "settings": {
+          }
+        },
+        "collection-list-0-1": {
+          "type": "collection",
+          "settings": {
+          }
+        },
+        "collection-list-0-2": {
+          "type": "collection",
+          "settings": {
+          }
+        },
+        "collection-list-0-3": {
+          "type": "collection",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "collection-list-0-0",
+        "collection-list-0-1",
+        "collection-list-0-2",
+        "collection-list-0-3"
+      ]
+    },
+    "video-modal": {
+      "type": "video-modal",
+      "settings": {
+        "full_width": true,
+        "height": "small",
+        "overlay_background": "linear-gradient(318deg, rgba(6, 6, 6, 0.5) 24%, rgba(0, 0, 0, 0.14) 100%)",
+        "text": "<p>Video modal<\/p>",
+        "color_scheme": "accent-2",
+        "spacing_top": 0
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "settings": {
+        "title": "Services",
+        "button_label": ""
+      },
+      "blocks": {
+        "multicolumn-0-0": {
+          "type": "column",
+          "settings": {
+            "link_label": "Learn more",
+            "link": "shopify://collections/all"
+          }
+        },
+        "multicolumn-0-1": {
+          "type": "column",
+          "settings": {
+            "link_label": "Learn more",
+            "link": "shopify://collections/all"
+          }
+        },
+        "multicolumn-0-2": {
+          "type": "column",
+          "settings": {
+            "link_label": "Learn more",
+            "link": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "multicolumn-0-0",
+        "multicolumn-0-1",
+        "multicolumn-0-2"
+      ]
+    },
+    "tabbed-product-lists": {
+      "type": "tabbed-product-lists",
+      "settings": {
+        "heading": "Featured products by category",
+        "layout": "media"
+      },
+      "blocks": {
+        "tabbed-product-list-0-0": {
+          "type": "collection",
+          "settings": {
+          }
+        },
+        "tabbed-product-list-0-1": {
+          "type": "collection",
+          "settings": {
+          }
+        },
+        "tabbed-product-list-0-2": {
+          "type": "collection",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "tabbed-product-list-0-0",
+        "tabbed-product-list-0-1",
+        "tabbed-product-list-0-2"
+      ]
+    },
+    "brands": {
+      "type": "brands",
+      "settings": {
+      },
+      "blocks": {
+        "brands-0-1": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        },
+        "brands-0-2": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        },
+        "brands-0-3": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        },
+        "brands-0-4": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        },
+        "brands-0-5": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        },
+        "brands-0-6": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "brands-0-1",
+        "brands-0-2",
+        "brands-0-3",
+        "brands-0-4",
+        "brands-0-5",
+        "brands-0-6"
+      ]
+    },
+    "map": {
+      "type": "map",
+      "settings": {
+        "color_scheme": "background-2"
+      },
+      "blocks": {
+        "map-location-0-0": {
+          "type": "location",
+          "settings": {
+          }
+        },
+        "map-location-0-1": {
+          "type": "location",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "map-location-0-0",
+        "map-location-0-1"
+      ]
+    },
+    "blog-posts": {
+      "type": "blog-posts",
+      "settings": {
+        "heading": "Guides",
+        "link_title": "More guides",
+        "link_url": "\/blogs\/news",
+        "posts_to_show": 4,
+        "show_author": false,
+        "columns": "4",
+        "card_type": "card"
+      }
+    },
+    "rich-text": {
+      "type": "rich-text",
+      "settings": {
+        "narrow": false,
+        "alignment": "left",
+        "limit_height": true
+      },
+      "blocks": {
+        "rich-text-0-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Talk about your brand"
+          }
+        },
+        "rich-text-0-2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Maranello includes a versatile long-form rich text section, designed with SEO in mind. By utilizing the expandable text feature, you can effectively present valuable information to your visitors without overwhelming them. Users can simply click the \"Read More\" button to access the complete content. This approach not only improves user experience but also allows you to integrate essential keywords and maintain a clean, well-structured website, positively impacting your search engine rankings.<\/p><p>Incorporating long-form content into your website has been proven to boost its SEO value. Search engines like Google often favor websites with in-depth, relevant, and high-quality content. With this expandable text feature, you have the flexibility to create comprehensive, keyword-rich content that directly addresses your target audience's needs and concerns. As your content becomes more discoverable, your website's credibility and authority within your niche will grow, driving more organic traffic and potential customers to your online store.<br\/><br\/>Moreover, this expandable text feature enables you to maintain a visually appealing and easy-to-navigate website. While long-form content is valuable for SEO, it can sometimes hinder user experience if not presented effectively. The option to collapse and expand sections ensures that your site remains user-friendly, organized, and uncluttered. As a result, visitors can quickly find the information they are looking for without being overwhelmed by excessive text. By combining these user experience enhancements with the SEO benefits of long-form content, this feature is a valuable asset for your Shopify store's overall success.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "rich-text-0-1",
+        "rich-text-0-2"
+      ]
+    }
+  },
+  "order": [
+    "slideshow",
+    "features-0",
+    "filters",
+    "featured-collections",
+    "banner-list",
+    "featured-collection",
+    "tabbed-collection-lists",
+    "collection-list",
+    "video-modal",
+    "multicolumn",
+    "tabbed-product-lists",
+    "brands",
+    "map",
+    "blog-posts",
+    "rich-text"
+  ]
+}

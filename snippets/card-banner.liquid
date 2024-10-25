@@ -1,0 +1,122 @@
+{% comment %}
+    Renders a customizable banner card.
+
+    Accepts:
+    - image: {Object} Optional. Image object.
+    - title: {String} Optional. The title.
+    - description: {String} Optional. The description.
+    - button_link: {String} Optional. Button link.
+    - button_text: {String} Optional. Button text.
+    - show_title: {Boolean} Show title when true. Default true.
+    - show_description: {Boolean} Show description when true. Default true.
+    - show_button: {Boolean} Show button when true. Default true.
+    - class: {String} Optional. CSS class.
+    - ratio: {Number} Optional. The ratio to display the card at.
+    - card_type: {String} Optional. The card's type.
+    - columns {Number} Optional. The number of columns the card is rendered in.
+    - id: {String} Optional. HTML id.
+    - settings: {Object} Optional. The card settings.
+    - settings.heading_size: {String} Title size for desktop.
+    - settings.mobile_heading_size: {String} Title size for mobile.
+    - settings.text_color: {String} Text color.
+    - lazyload: {Boolean} Whether to lazy load the main thumbnail.
+
+    Usage:
+    {% render 'card-banner' title: title, image: image %}
+{% endcomment %}
+
+{% liquid
+	if ratio == nil
+		assign ratio = 1
+	endif
+
+	assign has_title = true
+	if title == blank or show_title == false
+		assign has_title = false
+	endif
+	assign has_description = true
+	if description == blank or show_description == false
+		assign has_description = false
+	endif
+	assign has_button = true
+	if show_button == false or button_text == blank or button_link == blank
+		assign has_button = false
+	endif
+
+	if lazyload == true
+		assign lazy = 'lazy'
+	endif
+%}
+
+<div
+	{% if id != blank %}id="{{ id }}" {% endif %}
+	class="card card-banner card-banner-{{ card_type }} {{ class }}"
+	style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+>
+	<div class="card-media">
+	{% if button_link %}
+		<a href="{{ button_link }}">
+	{% endif %}
+			{% if image != blank %}
+				{%- capture image_sizes -%}
+					{% if columns == 1 or card_type == 'media' %}
+						(min-width: 1540px) 1540px, calc(100vw - 3rem)
+					{% else %}
+						(min-width: 1200px) calc((100vw - 6rem) / 2), (min-width: 990px) calc((100vw - 6rem) * 0.6), (min-width: 750px) calc(100vw - 4rem), calc(100vw - 3rem)
+					{% endif %}
+				{%- endcapture -%}
+				{{ image | image_url: width: 1540 | image_tag:
+					class: 'card-media-image',
+					sizes: image_sizes,
+					widths: '165, 440, 650, 850, 1100, 1200, 1540',
+					loading: lazy
+				}}
+			{% else %}
+				<div class="card-placeholder color-background-2">
+					{{ 'collection-1' | strip | placeholder_svg_tag: "card-media-image" }}
+				</div>
+			{% endif %}
+
+		{% unless title == blank %}
+			<span class="visually-hidden">{{ title }}</span>
+		{% endunless %}
+
+	{% if button_link %}
+		</a>
+	{% endif %}
+	</div>
+
+	{% if has_title or has_description or has_button %}
+		<div class="card-info-wrap  {% if settings.text_color != blank %}card-custom-color{% endif %}">
+			<div class="card-info" {% if settings.text_color != blank %}style="color: {{ settings.text_color }}"{% endif %}>
+				<div class="card-info-inner">
+					{%- if has_title -%}
+						<h3 class="card-heading card-heading-{{ settings.mobile_heading_size }} card-heading-desktop-{{ settings.heading_size }}">
+						{%- if button_link -%}
+							<a href="{{ button_link }}">
+						{%- endif -%}
+							{{ title }}
+						{%- if button_link -%}
+							</a>
+						{%- endif -%}
+						</h3>
+					{%- endif -%}
+
+					{%- if has_description -%}
+						<div class="card-caption">
+							{{ description }}
+						</div>
+					{%- endif -%}
+				</div>
+
+				{%- if has_button -%}
+					<a
+						href="{{ button_link }}"
+						class="{% if settings.button_type_link %}button-text-link{% else %}button color-button-{{ settings.button_color_scheme }} {% if card_type == 'media' %}button-large-desktop{% endif %}{% endif %}">
+						{{ button_text }}
+					</a>
+				{%- endif -%}
+			</div>
+		</div>
+	{% endif %}
+</div>

@@ -1,0 +1,184 @@
+/* Component - Rating
+=================================== */
+.star-rating-badge:empty {
+  display: none !important;
+}
+
+.star-rating-badge {
+  flex: none;
+}
+
+/* Shopify Reviews App */
+.star-rating-link {
+  color: rgb(var(--color-foreground));
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-size: calc(var(--font-body-scale) * 1.3rem);
+}
+
+.rating-star {
+  background-color: var(--color-product-review-star);
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  margin-left: .5rem;
+}
+
+.rating-star svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.rating-star svg path {
+  color: var(--color-base-white);
+}
+
+.rating-empty .rating-value {
+  display: none;
+}
+
+.rating-empty .rating-star {
+  background-color: rgba(var(--color-foreground), .2);
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.rating-empty .rating-star svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.rating-caption {
+  text-align: right;
+}
+
+.rating-value {
+  display: block;
+  font-weight: var(--font-bolder-weight);
+  min-height: 1.3rem;
+}
+
+/* Judge.me Reviews App */
+.jdgm-prev-badge {
+  display: flex !important;
+  align-items: center;
+  vertical-align: bottom;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+.jdgm-prev-badge[data-average-rating="0.00"] {
+  display: flex !important;
+}
+
+.jdgm-prev-badge .jdgm-prev-badge__text {
+  font-size: calc(var(--font-body-scale) * 1.2rem);
+  font-weight: var(--font-bolder-weight);
+  line-height: 1;
+}
+
+.jdgm-preview-badge .jdgm-star {
+  color: var(--color-product-review-star) !important;
+}
+
+.card-product .jdgm-prev-badge .jdgm-prev-badge__text {
+  display: none;
+}
+
+.jdgm-prev-badge .jdgm-star {
+  padding-right: .22rem !important;
+}
+
+.jdgm-prev-badge .jdgm-star.jdgm--off {
+  color: rgba(var(--color-foreground), 0.3);
+}
+
+.card-product .jdgm-prev-badge .jdgm-star {
+  font-size: 1.2rem;
+}
+
+.jdgm-widget.jdgm-preview-badge:not(:empty) {
+  display: block !important;
+}
+
+/* Stamped Reviews App */
+.stamped-badge {
+  display: flex;
+  align-items: center;
+  vertical-align: bottom;
+  line-height: normal;
+}
+
+.stamped-badge .stamped-badge-caption {
+  font-size: calc(var(--font-body-scale) * 1.2rem);
+  font-weight: var(--font-bolder-weight);
+}
+
+.card-product .stamped-badge .stamped-badge-caption {
+  display: none;
+}
+
+.stamped-badge .stamped-fa {
+  color: var(--color-product-review-star);
+  margin: 0;
+  padding: 0;
+  margin-left: -.1rem;
+}
+
+.stamped-badge .stamped-fa::before {
+  font-size: 1.7rem;
+}
+
+.stamped-badge .stamped-fa-star-o {
+  color: rgba(var(--color-foreground), 0.3);
+}
+
+/* Yotpo Reviews App */
+.yotpo-rating-badge.yotpo .yotpo-icon {
+  color: var(--color-product-review-star);
+  margin: 0;
+  margin-left: -.05rem;
+  padding: 0;
+  font-size: 1.6rem !important;
+}
+
+.yotpo-rating-badge.yotpo .yotpo-icon.yotpo-icon-empty-star {
+  color: rgba(var(--color-foreground), 0.3);
+}
+
+.yotpo-rating-badge.yotpo a {
+  color: rgba(var(--color-foreground)) !important;
+  font-size: calc(var(--font-body-scale) * 1.2rem);
+  font-family: var(--font-body-family);
+  font-weight: var(--font-bolder-weight) !important;
+  display: inline-block;
+  margin-left: .3rem;
+}
+
+.write-review-btn-hidden {
+  display: none !important;
+}
+
+.card-product .yotpo-rating-badge.yotpo a {
+  display: none;
+}
+
+.product-rating-hide-empty [data-average-rating="0.0"],
+.product-rating-hide-empty [data-average-rating="0.00"],
+.product-rating-hide-empty [data-rating="0.0"] {
+  display: none !important;
+}
+
+.stamped-product-reviews-badge:not(:empty) ~ .star-rating-link,
+.yotpo-rating-badge:not(:empty) ~ .star-rating-link,
+.jdgm-preview-badge:not(:empty) ~ .star-rating-link {
+  display: none;
+}

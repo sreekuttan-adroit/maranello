@@ -1,0 +1,110 @@
+{% comment %}
+    Renders a customizable collection card.
+
+    Accepts:
+    - collection: {Object} Collection object
+    - use_grid_image: {Boolean} Use grid image image if available. Default: false.
+    - image: {Object} Override image object. Optional.
+    - title: {String} Override title. Optional.
+    - description: {String} Override description. Optional.
+    - button_text: {String} Override button text. Optional.
+    - card_type: {String} The card's type, normal or banner-media.
+    - class: {String} Extra CSS classes. Optional
+    - settings: {Object} Optional. The card settings.
+
+    Usage:
+    {% render 'card-collection-custom' collection: collection, image: image, title: 'The title' %}
+{% endcomment %}
+
+{% liquid
+	assign target_image = collection.featured_image
+	if collection.metafields.images.collection_grid != blank and use_grid_image
+		assign target_image = collection.metafields.images.collection_grid
+	endif
+	if image != blank
+		assign target_image = image
+	endif
+%}
+
+<div
+	class="card card-fit-content {% if card_type == 'banner-media' %}card-banner card-banner-media{% else %}card-overlay{% endif %} {{ class }}"
+	{% if card_type == 'banner-media' %}style="--ratio-percent: 12.5%;"{% endif %}
+>
+	<div class="card-media">
+		<a href="{{ collection.url }}">
+			{%- capture image_sizes -%}
+				{% if card_type == 'banner-media' %}
+					(min-width: 1540px) 1540px, calc(100vw - 3rem)
+				{% else %}
+					(min-width: 1200px) 420px, (min-width: 750px) calc((100vw - 4rem - 3rem) / 3), calc((100vw - 3rem - 1rem) / 2)
+				{% endif %}
+			{%- endcapture -%}
+
+			{% if target_image != blank %}
+				{{ target_image | image_url: width: 1540 | image_tag:
+					class: 'card-media-image',
+					widths: '185, 200, 370, 420, 650, 750, 1100, 1200, 1540',
+					sizes: image_sizes
+				}}
+			{% else %}
+				<div class="card-placeholder color-background-2">
+					{{ 'collection-1' | strip | placeholder_svg_tag: "card-media-image" }}
+				</div>
+			{% endif %}
+
+			<span class="visually-hidden">
+				{% if title != blank %}
+					{{ title }}
+				{% elsif collection.title != blank %}
+					{{ collection.title }}
+				{% else %}
+					{{ 'onboarding.collection_title' | t }}
+				{% endif %}
+			</span>
+		</a>
+	</div>
+
+	<div class="card-info-wrap {% if settings.collection_text_color != blank %}card-custom-color{% endif %}">
+		<div
+			class="card-info {% if card_type != 'banner-media' %} color-background-2{% endif %} card-custom-color"
+			{% if settings.collection_text_color != blank %}style="color: {{ settings.collection_text_color }}"{% endif %}
+		>
+			<div class="card-info-inner">
+				<h3 class="card-heading {% if card_type == 'banner-media' %}card-heading-desktop-lg card-heading-lg{% endif %}">
+					{% if title != blank %}
+						<a href="{{ collection.url }}">{{ title }}</a>
+					{% elsif collection.title != blank %}
+						<a href="{{ collection.url }}">{{ collection.title }}</a>
+					{% else %}
+						{{ 'onboarding.collection_title' | t }}
+					{% endif %}
+				</h3>
+
+				{% unless description == blank and collection.description == blank %}
+					<div class="card-caption card-caption-sm">
+						{% if description != blank %}
+							{{ description }}
+						{% else %}
+							{{ collection.description }}
+						{% endif %}
+					</div>
+				{% endunless %}
+			</div>
+
+			<a class="{% if settings.button_type_link %}button-text-link{% else %}button {% if card_type == 'banner-media' %}button-large-desktop{% endif %}{% endif %}"
+				{% if collection.url == blank %}
+					role="link" aria-disabled="true"
+				{% else %}
+					href="{{ collection.url }}"
+				{% endif %}
+			>
+
+				{% if button_text != blank %}
+					{{ button_text }}
+				{% else %}
+					{{ 'general.collection.shop_collection' | t: title: collection.title }}
+				{% endif %}
+			</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,70 @@
+{% comment %}
+	Renders the language dropdown
+
+	Accepts:
+	- id: {String} Form id suffix. Optional
+	- classname: {String} Additional dropdown classes. Optional
+
+	Usage:
+	{% render 'collection-language' %}
+{% endcomment %}
+
+{{ 'component-dropdown.css' | asset_url | stylesheet_tag }}
+
+<localization-form>
+	{%- assign form_id = 'HeaderLanguageForm' | append: id -%}
+	{%- form 'localization', id: form_id, class: 'localization-form' -%}
+		<div class="no-js-hidden dropdown {{ classname }}">
+			<h2 class="visually-hidden" id="HeaderLanguageLabel{{ id }}">{{ 'localization.language_label' | t }}</h2>
+			<button class="dropdown-toggle"
+				type="button"
+				aria-expanded="false"
+				aria-controls="HeaderLanguageList{{ id }}"
+				aria-describedby="HeaderLanguageLabel{{ id }}"
+			>
+				<span class="dropdown-toggle-label">{{ localization.language.iso_code }}</span>
+				{% render 'icon-angle' %}
+			</button>
+
+			<div class="dropdown-list-wrap color-background-2" aria-hidden="true">
+				<div class="dropdown-list-wrap-scroll">
+					<ul class="dropdown-list" id="HeaderLanguageList{{ id }}" role="list">
+						{%- for language in localization.available_languages -%}
+							<li class="dropdown-list-item">
+								<a
+									class="dropdown-list-option"
+									href="#"
+									data-value="{{ language.iso_code }}"
+								>
+									{{ language.endonym_name | capitalize }}
+								</a>
+							</li>
+						{%- endfor -%}
+					</ul>
+				</div>
+			</div>
+
+			<input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+		</div>
+	{%- endform -%}
+</localization-form>
+
+<noscript>
+	{%- form 'localization', id: 'HeaderLanguageFormNoScript', class: 'localization-form' -%}
+		<div class="localization-form-select">
+			<h2 class="visually-hidden" id="HeaderLanguageLabelNoScript{{ id }}">{{ 'localization.language_label' | t }}</h2>
+			<select class="localization-selector link" name="locale_code" aria-labelledby="HeaderLanguageLabelNoScript{{ id }}">
+				{%- for language in localization.available_languages -%}
+					<option value="{{ language.iso_code }}"
+							lang="{{ language.iso_code }}" {%- if language.iso_code == localization.language.iso_code %} selected{% endif %}>
+						{{ language.endonym_name | capitalize }}
+					</option>
+				{%- endfor -%}
+			</select>
+		</div>
+		<button class="button button-tertiary">
+			<span class="visually-hidden">{{ 'localization.update_language' | t }}</span>
+			{% render 'angle', direction: 'right' %}
+		</button>
+	{%- endform -%}
+</noscript>

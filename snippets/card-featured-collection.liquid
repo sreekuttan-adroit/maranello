@@ -1,0 +1,132 @@
+{% comment %}
+    Renders a customizable collection card.
+
+    Accepts:
+    - collection: {Object} Collection object
+    - collections: {Object} Collections object array
+    - use_grid_image: {Boolean} Use grid image image if available. Default: false.
+    - image: {Object} Image object. Optional. If present, overrides the collection's image.
+    - title: {Boolean} Show title. Default: true
+    - description: {Boolean} Show description. Default: true
+    - button: {Boolean} Show button. Default: true
+    - button_text: {String} Override button text. Optional.
+    - class: {String} Extra CSS classes. Optional.
+    - ratio: {Number} Optional. The ratio to display the card at.
+    - card_type: {String} Optional. The card's type.
+    - columns {Number} Optional. The number of columns the card is rendered in.
+    - id: {String} Optional. HTML id.
+    - settings: {Object} Optional. The card settings.
+    - settings.heading_size: {String} Title size for desktop.
+    - settings.mobile_heading_size: {String} Title size for mobile.
+    - settings.text_color: {String} Title size for mobile.
+    - lazyload: {Boolean} Whether to lazy load the main thumbnail.
+
+    Usage:
+    {% render 'card-featured-info' collections: collections, image: image %}
+{% endcomment %}
+
+{% liquid
+	assign collection = collections | first
+
+	assign target_image = collection.featured_image
+	if collection.metafields.images.collection_grid != blank and use_grid_image
+		assign target_image = collection.metafields.images.collection_grid
+	endif
+	if image != blank
+		assign target_image = image
+	endif
+
+	if ratio == nil or ratio == 0
+		assign ratio = 1
+	endif
+
+	assign card_type_class = ''
+	if card_type == 'card'
+		assign card_type_class = 'card-standard color-background-2'
+	elsif card_type == 'overlay'
+		assign card_type_class = 'card-overlay'
+	elsif card_type == 'padded'
+		assign card_type_class = 'card-padded color-background-2'
+	endif
+
+	if lazyload == true
+		assign lazy = 'lazy'
+	endif
+%}
+
+<div
+	{% if id != blank %}id="{{ id }}" {% endif %}
+	class="card card-pointer-events-ignore {{ card_type_class }} {{ class }}"
+>
+	<div class="card-media">
+		<a href="{{ collection.url }}">
+			{%- capture image_sizes -%}
+				{% if columns == 1 %}
+					(min-width: 1540px) 1540px, calc(100vw - 3rem)
+				{% else %}
+					(min-width: 1200px) calc((100vw - 6rem) / 2), (min-width: 990px) calc((100vw - 6rem) * 0.6), (min-width: 750px) calc(100vw - 4rem), calc(100vw - 3rem)
+				{% endif %}
+			{%- endcapture -%}
+			<div class="aspect-ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+				{% if target_image != blank %}
+					{{ target_image | image_url: width: 1540 | image_tag:
+						class: 'card-media-image',
+						sizes: image_sizes,
+						widths: '165, 440, 650, 850, 1100, 1200, 1540',
+						loading: lazy
+					}}
+				{% else %}
+					<div class="card-placeholder">
+						{{ 'collection-1' | strip | placeholder_svg_tag: "card-media-image" }}
+					</div>
+				{% endif %}
+			</div>
+
+			{% unless title == false %}
+				<span class="visually-hidden">{{ collection.title }}</span>
+			{% endunless %}
+		</a>
+	</div>
+
+	{% unless title == false and description == false and button == false %}
+		<div class="card-info-wrap {% if settings.text_color != blank %}card-custom-color{% endif %}">
+			<div class="card-info {% if card_type == 'overlay' %}color-background-2{% endif %}" {% if settings.text_color != blank %}style="color: {{ settings.text_color }}"{% endif %}>
+				{%- unless title == false -%}
+					<h3 class="card-heading card-heading-{{ settings.mobile_heading_size }} card-heading-desktop-{{ settings.heading_size }}">
+						{%- if collection.title -%}
+							<a href="{{ collection.url }}">{{ collection.title }}</a>
+						{%- else -%}
+							{{ 'onboarding.collection_title' | t }}
+						{%- endif -%}
+					</h3>
+				{%- endunless -%}
+
+				{%- unless collections == blank or collections.size < 2 -%}
+					<div class="card-caption">
+						{%- for subcollection in collections offset: 1 -%}
+							<a href="{{ subcollection.url }}" class="card-caption-block-link link-text">
+								{{ subcollection.title }}
+							</a>
+						{%- endfor -%}
+					</div>
+				{%- endunless -%}
+
+				{%- unless button == false -%}
+					<a class="{% if settings.button_type_link %}button-text-link{% else %}button color-button-{{ settings.button_color_scheme }}{% endif %}"
+						{% if collection.url == blank %}
+							role="link" aria-disabled="true"
+						{% else %}
+							href="{{ collection.url }}"
+						{% endif %}
+					>
+						{% if button_text != blank %}
+							{{ button_text }}
+						{% else %}
+							{{ 'general.collection.shop_collection' | t: title: collection.title }}
+						{% endif %}
+					</a>
+				{%- endunless -%}
+			</div>
+		</div>
+	{% endunless %}
+</div>

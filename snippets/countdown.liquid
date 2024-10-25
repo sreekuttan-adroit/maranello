@@ -1,0 +1,79 @@
+{% comment %}
+    Renders the countdown module of the countdown timer section.
+
+    Accepts:
+    - expiration_date: {Number} The expiration date.
+    - expiration_message: {String} A message to show to the user on expiry. Optional.
+
+    Usage:
+    {% render 'countdown', expiration_date: expiration_date %}
+{% endcomment %}
+
+{% liquid
+	assign now = 'now' | date: '%s'
+	assign distance = expiration_date | minus: now
+	if distance < 0
+		assign distance = 0
+	endif
+	assign seconds = distance | modulo: 60 | floor
+	assign minutes = distance | divided_by: 60 | modulo: 60 | floor
+	assign hours = distance | divided_by: 3600 | modulo: 24 | floor
+	assign days = distance | divided_by: 86400 | floor
+%}
+
+{% if expiration_date != blank and distance > 0 %}
+	{{ 'component-countdown.css' | asset_url | stylesheet_tag }}
+	<script src="{{ 'countdown.js' | asset_url }}" defer="defer"></script>
+
+	<div class="countdown-timer-wrapper">
+		<countdown-timer date="{{ expiration_date }}" class="no-js-hidden">
+			<div class="countdown">
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-days"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-hours"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-minutes"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-value-pair countdown-seconds"></div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+				</div>
+			</div>
+		</countdown-timer>
+
+		<noscript>
+			<div class="countdown">
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ days }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ hours }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ minutes }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+				</div>
+				<div class="countdown-item">
+					<div class="countdown-item-value">{{ seconds }}</div>
+					<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+				</div>
+			</div>
+		</noscript>
+	</div>
+{% endif %}
+
+{% if expiration_message != blank and distance == 0 %}
+	<div class="countdown-timer-wrapper">
+		<div class="countdown-timer-expiration-message color-background-2">
+			{{ expiration_message }}
+		</div>
+	</div>
+{% endif %}

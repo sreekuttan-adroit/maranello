@@ -1,0 +1,132 @@
+/* Component - Tabs Component
+=================================== */
+.tabs-component-content[aria-hidden=true] {
+  display: none;
+}
+
+.tab-nav {
+  display: flex;
+  align-items: center;
+  grid-gap: 2rem;
+  overflow-x: auto;
+  position: relative;
+  padding-right: 4rem;
+  padding-bottom: 1rem;
+}
+
+.tab-nav-wrap {
+  position: relative;
+}
+
+.tab-nav-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(var(--color-background)));
+  width: 5rem;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (min-width: 990px) {
+  .tab-nav {
+    grid-gap: 3rem;
+    border-top: 1px solid var(--color-border);
+    overflow-x: visible;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+
+  .tab-nav-wrap::after {
+    display: none;
+  }
+
+  .block-section-title-aux .tab-nav {
+    border-top: 0;
+  }
+
+  .block-section-title-aux .tab-nav-item {
+    min-height: 44px;
+  }
+}
+
+.tab-nav-item {
+  flex: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  height: auto;
+  font-size: calc(var(--font-body-scale) * 1.5rem);
+  line-height: calc(1.25 / var(--font-body-scale));
+  color: rgb(var(--color-foreground-alt));
+  position: relative;
+  font-weight: var(--font-bolder-weight);
+  overflow: hidden;
+  margin-top: -1px;
+}
+
+.tab-nav-item > svg {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+@media (min-width: 990px) {
+  .tab-nav-item {
+    padding: 2.5rem .25rem 0 0;
+  }
+
+  .tab-nav-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 2px;
+    width: 0;
+    left: 0;
+    background: currentColor;
+    transition: width .36s ease;
+  }
+
+  .tab-nav-item::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    height: 30px;
+    width: 30px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateX(calc(-50% + 1px)) rotate(34deg) skew(-24deg);
+    background: rgb(var(--color-background));
+    transition: top .18s ease;
+  }
+
+  .tab-nav-item.is-active::before {
+    width: calc(100% + 2px);
+  }
+
+  .tab-nav-item.is-active::after {
+    top: -24px;
+  }
+}
+
+.tab-nav-item.is-active {
+  color: rgb(var(--color-accent-1));
+}
+
+[class*="color-accent-"] .tab-nav-item.is-active {
+  color: currentColor;
+}
+
+.tab-nav-item-disabled {
+  cursor: not-allowed;
+}
+
+.tab-nav-item-disabled > * {
+  opacity: 0.5;
+}

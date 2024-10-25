@@ -1,0 +1,115 @@
+/* Section - Featured collection
+========================================= */
+
+/* Layout */
+
+.featured-collection-layout {
+	position: relative;
+}
+
+.featured-collection-layout-intro {
+	margin-bottom: 4rem;
+}
+
+@media (min-width: 990px) {
+	.featured-collection-layout.has-intro {
+		display: grid;
+		grid-template-columns: 28% 1fr;
+		grid-column-gap: var(--grid-desktop-horizontal-spacing);
+	}
+
+	.featured-collection-layout-intro {
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 1200px) {
+	.featured-collection-layout.has-intro {
+		grid-template-columns: min(28%, 37rem) 1fr;
+	}
+}
+
+/* Countdown module */
+
+.featured-collection-expiry-wrap .countdown {
+	margin: 3rem 0;
+}
+
+.featured-collection-expiry-description {
+	margin-bottom: 3rem;
+}
+
+.featured-collection-countdown-message {
+	border-radius: var(--border-radius);
+	box-shadow: inset 0 0 0 0.1rem rgb(var(--color-card-border));
+	padding: 1.5rem;
+	margin-bottom: 3rem;
+}
+
+.featured-collection-countdown-message > :last-child {
+	margin-bottom: 0;
+}
+
+@media (min-width: 990px) {
+	.featured-collection-expiry-wrap-sticky {
+		position: sticky;
+		top: 2rem;
+	}
+
+	.featured-collection-expiry-description {
+		max-width: 32rem
+	}
+}
+
+.featured-collection-editor-hidden-note {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 1rem;
+	background: var(--color-error-background);
+	color: var(--color-error);
+	font-size: calc(var(--font-body-scale) * 1.3rem);
+	opacity: .85;
+	border-radius: var(--border-radius);
+	z-index: 5;
+}
+
+@media (max-width: 749px) {
+	.grid-item-card-fit-content {
+		order: -1;
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	.grid-item-card-fit-content .card.card-fit-content {
+		--ratio-percent: 52.25%;
+	}
+
+	.grid-item-card-fit-content .card.card-fit-content .card-media {
+		margin: 0;
+		border-radius: var(--border-radius-base);
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+		height: auto;
+		padding-bottom: 52.5%;
+	}
+
+	.grid-item-card-fit-content .card.card-fit-content .card-info-wrap {
+		margin-bottom: 2rem;
+	}
+
+	.grid-item-card-fit-content .card.card-fit-content .card-info {
+		position: relative;
+		width: 100%;
+		margin: 0;
+		padding: 2rem;
+		display: flex;
+		height: 100%;
+		flex: auto;
+		flex-direction: column;
+		align-items: flex-start;
+		transition: box-shadow .18s ease;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}

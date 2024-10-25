@@ -1,0 +1,71 @@
+{% comment %}
+	Renders the region dropdown
+
+	Accepts:
+	- id: {String} Form id suffix. Optional
+	- classname: {String} Additional dropdown classes. Optional
+
+	Usage:
+	{% render 'collection-region' %}
+{% endcomment %}
+
+{{ 'component-dropdown.css' | asset_url | stylesheet_tag }}
+
+<localization-form>
+	{%- assign form_id = 'HeaderCountryForm' | append: id -%}
+	{%- form 'localization', id: form_id, class: 'localization-form' -%}
+		<div class="no-js-hidden dropdown {{ classname }}">
+			<h2 class="visually-hidden" id="HeaderCountryLabel{{ id }}">{{ 'localization.country_label' | t }}</h2>
+			<button class="dropdown-toggle"
+				type="button"
+				aria-expanded="false"
+				aria-controls="HeaderCountryList{{ id }}"
+				aria-describedby="HeaderCountryLabel{{ id }}"
+			>
+				<span class="dropdown-toggle-label">{{ localization.country.iso_code }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})</span>
+				{% render 'icon-angle' %}
+			</button>
+
+			<div class="dropdown-list-wrap color-background-2" aria-hidden="true">
+				<div class="dropdown-list-wrap-scroll">
+					<ul class="dropdown-list" id="HeaderCountryList{{ id }}" role="list">
+						{%- for country in localization.available_countries -%}
+							<li class="dropdown-list-item">
+								<a
+									class="dropdown-list-option"
+									href="#"
+									data-value="{{ country.iso_code }}"
+								>
+									{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+								</a>
+							</li>
+						{%- endfor -%}
+					</ul>
+				</div>
+			</div>
+
+			<input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+		</div>
+	{%- endform -%}
+</localization-form>
+
+<noscript>
+	{%- form 'localization', id: 'HeaderCountryFormNoScript', class: 'localization-form' -%}
+		<div class="localization-form-select">
+			<h2 class="visually-hidden" id="HeaderCountryLabelNoScript{{ id }}">{{ 'localization.country_label' | t }}</h2>
+			<select class="localization-selector link" name="country_code" aria-labelledby="HeaderCountryLabelNoScript{{ id }}">
+				{%- for country in localization.available_countries -%}
+					<option
+						value="{{ country.iso_code }}" {%- if country.iso_code == localization.country.iso_code %} selected{% endif %}>
+						{{ country.name }}
+						({{ country.currency.iso_code }} {{ country.currency.symbol }})
+					</option>
+				{%- endfor -%}
+			</select>
+		</div>
+		<button class="button button-tertiary">
+			<span class="visually-hidden">{{ 'localization.update_country' | t }}</span>
+			{% render 'angle', direction: 'right' %}
+		</button>
+	{%- endform -%}
+</noscript>

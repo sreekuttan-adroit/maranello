@@ -1,0 +1,55 @@
+{% comment %}
+    Renders a customizable image banner card.
+
+    Accepts:
+    - image: {Object} Optional. Image object.
+    - description: {String} Optional. The description.
+    - link: {String} Optional. The link.
+    - class: {String} Optional. CSS class.
+    - columns {Number} Optional. The number of columns the card is rendered in.
+    - id: {String} Optional. HTML id.
+
+    Usage:
+    {% render 'card-image-banner' description: description, image: image %}
+{% endcomment %}
+
+{% liquid
+	assign fetch_priority = 'auto'
+	if section.index == 1
+		assign fetch_priority = 'high'
+	endif
+%}
+
+<div
+	{% if id != blank %}id="{{ id }}" {% endif %}
+	class="card-image-banner {{ class }}"
+>
+	{% if link %}
+		<a href="{{ link }}">
+	{% endif %}
+
+	{% if image != blank %}
+		{%- capture image_sizes -%}
+			{% if columns == 1 %}
+				(min-width: 1420px) 1420px, calc(100vw - 3rem)
+			{% else %}
+				(min-width: 1200px) calc((100vw - 6rem) / 2), (min-width: 990px) calc((100vw - 6rem) * 0.6), (min-width: 750px) calc(100vw - 4rem), calc(100vw - 3rem)
+			{% endif %}
+		{%- endcapture -%}
+		{{ image | image_url: width: 1420 | image_tag:
+			sizes: image_sizes,
+			widths: '165, 440, 650, 850, 1100, 1200, 1420',
+			fetchpriority: fetch_priority
+		}}
+	{% else %}
+		{{ 'collection-1' | strip | placeholder_svg_tag }}
+	{% endif %}
+
+	{% unless description == blank %}
+		<span class="visually-hidden">{{ description }}</span>
+	{% endunless %}
+
+	{% if link %}
+		</a>
+	{% endif %}
+</div>

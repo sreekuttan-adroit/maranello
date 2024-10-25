@@ -1,0 +1,120 @@
+/* Section - Image hotspots
+=================================== */
+
+.image-hotspots {
+	overflow: hidden;
+}
+
+.no-js .image-hotspots,
+.image-hotspots.loaded {
+	overflow: visible;
+}
+
+.image-hotspots-image-wrap {
+	position: relative;
+	background-color: rgb(var(--color-base-background-2));
+	border-radius: var(--border-radius-base);
+}
+
+.image-hotspots-image {
+	border-radius: var(--border-radius-base);
+}
+
+.hotspot-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.2rem;
+	height: 3.2rem;
+	cursor: pointer;
+	box-shadow: none;
+	padding: 0;
+	position: relative;
+	border-radius: 50%;
+	border: 0;
+	transform: translate(-50%, -50%);
+}
+
+.hotspot-toggle::after {
+	content: "";
+	background-color: rgb(var(--color-foreground));
+	width: 0.5rem;
+	height: 0.5rem;
+	z-index: 1;
+	border-radius: 50%;
+}
+
+@media (min-width: 750px) {
+	.hotspot-toggle {
+		width: 4.2rem;
+		height: 4.2rem;
+	}
+}
+
+.hotspot {
+	position: absolute;
+}
+
+.hotspot-card-wrap {
+	width: 28rem;
+	position: absolute;
+	top: 2rem;
+	opacity: 0;
+	pointer-events: none;
+	transform: scale(0.95);
+	transition: transform 0.18s ease, opacity 0.18s ease;
+	z-index: 10;
+	visibility: hidden;
+}
+
+@media (min-width: 990px) {
+	.hotspot-card-wrap {
+		width: 34rem;
+		top: 3rem;
+		transform: scale(0.95);
+	}
+}
+
+.hotspot-card .card-caption {
+	margin-bottom: 0;
+}
+
+.hotspot.is-active .hotspot-card-wrap,
+.no-js .hotspot-toggle:focus + .hotspot-card-wrap {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: auto;
+	visibility: visible;
+}
+
+@media (min-width: 990px) {
+	.hotspot.is-active .hotspot-card-wrap,
+	.no-js .hotspot-toggle:focus + .hotspot-card-wrap {
+		transform: scale(1);
+	}
+}
+
+.no-js .hotspot-toggle:focus + .hotspot-card-wrap {
+	left: 50% !important;
+	right: auto !important;
+	transform: translateX(-50%) scale(1) !important;
+}
+
+.hotspot-card .card-media {
+	margin-bottom: 1.5rem;
+	text-align: left;
+}
+
+.hotspot-card-image {
+	border-radius: var(--border-radius-base);
+	width: auto;
+}
+
+.hotspot-card .hotspot-card-heading {
+	margin-bottom: 1rem;
+	font-weight: var(--font-bolder-weight);
+}
+
+.hotspot-card .card-caption:not(:last-child) {
+	margin-bottom: 1.5rem;
+}

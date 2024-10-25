@@ -1,0 +1,99 @@
+/* Component - Price
+=================================== */
+.price-regular-preorder {
+  display: flex;
+  align-items: center;
+  grid-gap: 1rem;
+}
+
+.price-on-sale .price-regular {
+  display: none;
+}
+
+.card .price-regular .badge-sale {
+  display: none;
+}
+
+.price-item {
+  margin: 0;
+}
+
+.price-item > span {
+  font-size: calc(var(--font-product-price-scale) * 1.4rem);
+}
+
+.price-item .sup {
+  display: block;
+  top: 0;
+  line-height: normal;
+  font-size: calc(var(--font-product-price-scale) * 1.2rem);
+  color: rgb(var(--color-price-discounted));
+  font-weight: 400;
+  position: relative;
+  vertical-align: baseline;
+}
+
+@media (min-width: 1200px) {
+  .price-item .sup {
+    display: inline-block;
+  }
+}
+
+.product-info .price-item .sup {
+  display: inline-block;
+}
+
+.price-regular .price-item-regular,
+.price-item-sale {
+  font-weight: var(--font-bolder-weight);
+  display: block;
+  color: rgb(var(--color-price));
+  font-size: calc(var(--font-body-scale) * 1.8rem);
+  line-height: 1;
+}
+
+.product-info .price-regular .price-item-regular,
+.product-info .price-item-sale {
+  font-size: calc(var(--font-product-price-scale) * 2.4rem);
+}
+
+.product-info .price-discount {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  margin-bottom: .5rem;
+}
+
+.price-sale s {
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  font-size: calc(var(--font-product-price-scale) * 1.3rem);
+  color: rgb(var(--color-price-discounted));
+  margin-bottom: 0.5rem;
+}
+
+[class*="color-accent"] .product-page .price-regular .price-item-regular,
+[class*="color-accent"] .product-page .price-item-sale,
+[class*="color-accent"] .product-page .price-item .sup,
+[class*="color-accent"] .product-page .price-sale s {
+  color: rgb(var(--color-foreground));
+}
+
+.price-sale s::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  border: 1px solid currentColor;
+  opacity: 0.5;
+  transform: rotate(-10deg);
+}
+
+@media (min-width: 1200px) {
+  .price-sale s {
+    margin-bottom: 0;
+  }
+}

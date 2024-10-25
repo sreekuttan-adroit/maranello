@@ -1,0 +1,376 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-image-hotspots.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'image-hotspots.js' | asset_url }}" defer="defer"></script>
+
+{% liquid
+	assign block_section_class = 'block-section'
+	unless section.settings.color_scheme == 'background-1'
+		assign block_section_class = block_section_class | append: ' block-section-padded'
+	endunless
+
+	assign fetch_priority = 'auto'
+	if section.index == 1
+		assign fetch_priority = 'high'
+	endif
+%}
+
+<style>
+	#shopify-section-{{ section.id }} .block-section {
+		margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+		margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+	}
+
+	#shopify-section-{{ section.id }} .block-section-padded {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+		padding-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+	}
+
+	@media (min-width: 990px) {
+		#shopify-section-{{ section.id }} .block-section {
+			margin-top: {{ section.settings.spacing_top }}px;
+			margin-bottom: {{ section.settings.spacing_bottom }}px;
+		}
+
+		#shopify-section-{{ section.id }} .block-section-padded {
+			margin-top: 0;
+			margin-bottom: 0;
+			padding-top: {{ section.settings.spacing_top }}px;
+			padding-bottom: {{ section.settings.spacing_bottom }}px;
+		}
+	}
+</style>
+
+<div class="color-{{ section.settings.color_scheme }}">
+	<div class="container">
+		<div class="{{ block_section_class }}">
+			{% if section.settings.heading != blank or section.settings.subheading != blank or section.settings.link_title != blank and section.settings.link_url != blank %}
+				<div class="block-block-section-title-wrapper {% if section.settings.subheading != blank %}with-subtitle{% endif %}">
+					{% if section.settings.heading != blank or section.settings.subheading != blank %}
+						<div class="block-section-title-wrap">
+							{% if section.settings.heading != blank %}
+								<h2 class="block-section-title">{{ section.settings.heading }}</h2>
+							{% endif %}
+							{% if section.settings.subheading != blank %}
+								<p class="block-section-subtitle">{{ section.settings.subheading }}</p>
+							{% endif %}
+						</div>
+					{% endif %}
+
+					{% if section.settings.link_title != blank and section.settings.link_url != blank %}
+						<div class="block-section-title-aux">
+							<a href="{{ section.settings.link_url }}" class="link-text-secondary">
+								{{ section.settings.link_title }} {% render 'angle', direction: 'right' %}
+							</a>
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<image-hotspots>
+				<div class="image-hotspots">
+					<div class="image-hotspots-image-wrap">
+						{% if section.settings.image %}
+							{{ section.settings.image | image_url: width: 3840 | image_tag:
+								class: 'image-hotspots-image',
+								widths: '375, 550, 750, 1100, 1540, 1780, 2000, 3000, 3840',
+								sizes: '(min-width: 1540px) 1540px, calc(100vw - 3rem)',
+								fetchpriority: fetch_priority
+							}}
+						{% else %}
+							{{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+						{% endif %}
+
+						{% for block in section.blocks %}
+							<div
+								class="hotspot"
+								data-x="{{ block.settings.position_x }}"
+								data-y="{{ block.settings.position_y }}"
+								style="top: {{ block.settings.position_y }}%; left: {{ block.settings.position_x }}%;">
+								<button class="hotspot-toggle color-accent-1" {% if section.settings.bullet_color %}style="background: {{ section.settings.bullet_color }};"{% endif %}>
+									<span class="visually-hidden">
+										{{ 'sections.image_hotspots.view_details' | t }}
+									</span>
+								</button>
+
+								<div class="hotspot-card-wrap">
+									{% if block.settings.product != blank %}
+										{% render 'card-product',
+											card_product: block.settings.product,
+											show_vendor: block.settings.show_vendor,
+											show_stock: block.settings.show_stock,
+											show_rating: block.settings.show_rating,
+											show_add_to_cart: block.settings.show_add_to_cart,
+											class: 'color-background-2',
+											mobile_two_columns: false,
+											event_context: 'ImageHotspotsSection',
+											lazyload: true
+										%}
+									{% else %}
+										<div class="hotspot-card card card-padded color-background-2">
+											{% if block.settings.image != blank %}
+												<div class="hotspot-card-image-wrap card-media">
+													{{ block.settings.image | image_url: width: 600 | image_tag:
+													class: 'hotspot-card-image',
+													widths: '300, 600, 900, 1200, 1500',
+													sizes: '300px',
+													loading: 'lazy'
+													}}
+												</div>
+											{% endif %}
+
+											{% if block.settings.title != blank %}
+												<h3 class="hotspot-card-heading card-heading">
+												{%- if block.settings.button_link -%}
+													<a href="{{ block.settings.button_link }}">
+														{%- endif -%}
+														{{ block.settings.title }}
+														{%- if block.settings.button_link -%}
+													</a>
+													{%- endif -%}
+												</h3>
+											{% endif %}
+
+											{% if block.settings.description != blank %}
+												<div class="hotspot-card-caption card-caption rte">
+													{{ block.settings.description }}
+												</div>
+											{% endif %}
+
+											{%- unless block.settings.button_text == blank or block.settings.button_link == blank -%}
+												<a
+													href="{{ block.settings.button_link }}"
+													class="button-text-link">
+													{{ block.settings.button_text }}
+												</a>
+											{%- endunless -%}
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</image-hotspots>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.image_hotspots.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlays"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.image_hotspots.settings.heading.label",
+      "default": "Image hotspots"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.image_hotspots.settings.subheading.label"
+    },
+    {
+      "type": "text",
+      "id": "link_title",
+      "label": "t:sections.image_hotspots.settings.link_title.label"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "t:sections.image_hotspots.settings.link_url.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.image_hotspots.settings.image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.colors.heading"
+    },
+    {
+      "type": "color",
+      "id": "bullet_color",
+      "label": "t:sections.image_hotspots.settings.bullet_color.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.color_scheme.label",
+      "default": "background-1",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "accent-3",
+          "label": "t:sections.all.colors.accent_3.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.section_spacing.heading"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 90,
+      "label": "t:sections.all.section_spacing.spacing_top.label"
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 90,
+      "label": "t:sections.all.section_spacing.spacing_bottom.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "t:sections.image_hotspots.blocks.hotspot.name",
+      "settings": [
+        {
+          "type": "range",
+          "id": "position_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10,
+          "unit": "%",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.position_x.label"
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10,
+          "unit": "%",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.position_y.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.title.label",
+          "default": "Hotspot title"
+        },
+        {
+          "id": "description",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.description.label",
+          "type": "richtext",
+          "default": "<p>Pair text with an image to display hotspot content.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.button_text.label",
+          "default": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.button_link.label"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.product.label",
+          "info": "t:sections.image_hotspots.blocks.hotspot.settings.product.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_vendor",
+          "default": true,
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.show_vendor.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_rating",
+          "default": false,
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.show_rating.label",
+          "info": "t:sections.image_hotspots.blocks.hotspot.settings.show_rating.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.show_stock.label",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_add_to_cart",
+          "label": "t:sections.image_hotspots.blocks.hotspot.settings.show_add_to_cart.label",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image_hotspots.presets.name",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 21,
+            "position_y": 15
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 50,
+            "position_y": 87
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 70,
+            "position_y": 30
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,66 @@
+{% comment %}
+    Renders the countdown module of the main collection banner section.
+
+    Accepts:
+    - expiration_date: {Number} The expiration date.
+
+    Usage:
+    {% render 'main-collection-banner-countdown', expiration_date: expiration_date %}
+{% endcomment %}
+
+{% liquid
+	assign now = 'now' | date: '%s'
+	assign distance = expiration_date | minus: now
+	if distance < 0
+		assign distance = 0
+	endif
+	assign seconds = distance | modulo: 60 | floor
+	assign minutes = distance | divided_by: 60 | modulo: 60 | floor
+	assign hours = distance | divided_by: 3600 | modulo: 24 | floor
+	assign days = distance | divided_by: 86400 | floor
+%}
+
+{{ 'component-countdown.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'countdown.js' | asset_url }}" defer="defer"></script>
+
+<countdown-timer date="{{ expiration_date }}" class="no-js-hidden">
+	<div class="countdown">
+		<div class="countdown-item">
+			<div class="countdown-value-pair countdown-days"></div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-value-pair countdown-hours"></div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-value-pair countdown-minutes"></div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-value-pair countdown-seconds"></div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+		</div>
+	</div>
+</countdown-timer>
+
+<noscript>
+	<div class="countdown">
+		<div class="countdown-item">
+			<div class="countdown-item-value">{{ days }}</div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.days' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-item-value">{{ hours }}</div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.hours' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-item-value">{{ minutes }}</div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.minutes' | t }}</span>
+		</div>
+		<div class="countdown-item">
+			<div class="countdown-item-value">{{ seconds }}</div>
+			<span class="countdown-item-label">{{ 'sections.featured_collection.seconds' | t }}</span>
+		</div>
+	</div>
+</noscript>

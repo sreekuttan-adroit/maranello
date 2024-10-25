@@ -1,0 +1,196 @@
+{% comment %}
+    Renders a product card in media compact format.
+
+    Accepts:
+    - card_product: {Object} Product object
+    - mobile_two_columns: {Boolean} Whether the card is displayed in two columns when on mobile. Default: false
+    - show_vendor: {Boolean} Show the product vendor. Default: false
+    - show_stock: {Boolean} Show the product stock. Default: false
+    - show_rating: {Boolean} Show the product rating. Default: false
+    - event_context: {Object} The JavaScript's cart-item:add event context (the location of the product card).
+    - lazyload: {Boolean} Whether to lazy load the main thumbnail.
+
+    Usage:
+    {% render 'card-product-media-compact' card_product: product %}
+{% endcomment %}
+
+{%- liquid
+	assign ratio = 1
+	if card_product.featured_media and settings.product_image_ratio == 'portrait'
+		assign ratio = 0.8
+	elsif card_product.featured_media and settings.product_image_ratio == 'landscape'
+		assign ratio = 1.77
+	elsif card_product.featured_media and settings.product_image_ratio == 'adapt'
+		assign ratio = card_product.featured_media.aspect_ratio
+	endif
+	if ratio == 0 or ratio == nil
+		assign ratio = 1
+	endif
+
+	assign is_pre_order = false
+	if card_product.template_suffix == 'pre-order' or card_product.template_suffix == 'pre-order-two-columns'
+		assign is_pre_order = true
+	endif
+
+	if lazyload == true
+		assign lazy = 'lazy'
+	endif
+-%}
+
+{% if card_product and card_product != empty %}
+	{%- capture image_sizes -%}
+		{% if mobile_two_columns %}
+			(min-width: 750px) 54px, calc((100vw - 3rem - 1rem) / 2)
+		{% else %}
+			(min-width: 750px) 54px, calc(100vw - 3rem - 1rem)
+		{% endif %}
+	{%- endcapture -%}
+
+	<product-card
+		class="card card-product card-product-media-compact
+			{% unless card_product.featured_media %} card-no-media{% endunless %}
+			{% unless show_rating %} card-product-no-rating{% endunless %}
+			{{ class }}"
+	>
+		<figure class="card-media {% if settings.product_image_crop != true %} card-media-contain{% endif %}">
+			<a href="{{ card_product.url }}" class="js-product-link">
+				{% if card_product.featured_media %}
+					{% if ratio != 0 %}
+						<div class="aspect-ratio" style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;">
+					{% endif %}
+					{{ card_product.featured_media | image_url: width: 950 | image_tag:
+						class: 'card-media-image',
+						loading: lazy,
+						sizes: image_sizes,
+						widths: '54, 108, 162, 200, 370, 420, 650, 750, 950'
+					}}
+					{% assign second_image = card_product.images[1] %}
+					{%- if second_image != nil and settings.products_show_secondary_image -%}
+						{{ second_image | image_url: width: 950 | image_tag:
+							class: 'card-media-image',
+							loading: 'lazy',
+							sizes: image_sizes,
+							widths: '54, 108, 162, 200, 370, 420, 650, 750, 950'
+						}}
+					{%- endif -%}
+					{% if ratio != 0 %}
+						</div>
+					{% endif %}
+				{% endif %}
+			</a>
+		</figure>
+
+		<div class="card-info-wrap">
+			<div class="card-info">
+				{% if show_vendor and card_product.vendor != blank %}
+					{% liquid
+						assign matching_collection = false
+						assign vendor_handle = card_product.vendor | handleize
+						for collection in card_product.collections
+							if collection.handle == vendor_handle
+								assign matching_collection = true
+							endif
+						endfor
+					%}
+					<div class="card-eyebrow">
+						{% if matching_collection %}
+							<a href="{{ routes.collections_url }}/{{ vendor_handle }}">{{ card_product.vendor }}</a>
+						{% else %}
+							{{ card_product.vendor | link_to_vendor }}
+						{% endif %}
+					</div>
+				{% endif %}
+
+				<div class="card-heading-wrap">
+					<h3 class="card-heading typography-{{ settings.product_title_font }}">
+						{% unless settings.catalog_enabled or settings.sale_badge_mode == 'none' %}
+							{% if card_product.compare_at_price > card_product.price %}
+								<div class="card-badge top right">
+									{% render 'badge-sale', product: card_product, use_variant: false %}
+								</div>
+							{% elsif is_pre_order %}
+								<div class="card-badge top right">
+									<span class="badge badge-sale">
+										{{ 'products.product.pre_order' | t }}
+									</span>
+								</div>
+							{% endif %}
+						{% endunless %}
+
+						<a href="{{ card_product.url }}" class="js-product-link"> {{ card_product.title | escape }}</a>
+					</h3>
+
+					{% render 'card-product-metafields', product: card_product %}
+
+					{% render 'card-product-custom-badges', product: card_product, class: 'card-product-badges' %}
+
+					{% if settings.swatches_on_product_listings %}
+						{% render 'card-product-swatches', product: card_product %}
+					{% endif %}
+				</div>
+
+				{% unless settings.catalog_enabled %}
+					{%- if show_stock -%}
+						{% render 'product-availability-listing', product: card_product %}
+					{% endif %}
+				{% endunless %}
+			</div>
+
+			{% unless settings.catalog_enabled %}
+				<div class="card-footer {% if settings.products_hide_empty_star_rating %}product-rating-hide-empty{% endif %}">
+					{% liquid
+						render 'price', product: card_product, discount_badge: false
+
+						if show_rating
+							render 'product-rating-widget', product: card_product
+						endif
+					%}
+
+					<div class="card-floating-footer">
+						{% render 'card-product-add-to-cart', product: card_product, event_context: event_context %}
+					</div>
+				</div>
+			{% endunless %}
+		</div>
+	</product-card>
+{% else %}
+	<div class="card card-product card-product-media-compact {% unless show_rating %} card-product-no-rating{% endunless %} {{ class }}">
+		<figure class="card-media">
+			<a role="link" aria-disabled="true">
+				{{ 'product-1' | strip | placeholder_svg_tag }}
+			</a>
+		</figure>
+
+		<div class="card-info-wrap">
+			<div class="card-info">
+				{% if show_vendor and card_product.vendor != blank %}
+					<div class="card-eyebrow">{{ 'products.product.vendor' | t }}</div>
+				{% endif %}
+
+				<div class="card-heading-wrap">
+					<h3 class="card-heading typography-{{ settings.product_title_font }}">
+						<a role="link" aria-disabled="true">{{ 'onboarding.product_title' | t }}</a>
+					</h3>
+				</div>
+
+				{% unless settings.catalog_enabled %}
+					<div class="badge-stock badge-stock-in">
+						<span class="badge-stock-icon"></span> {{ 'products.product.availability.in_stock' | t }}
+					</div>
+				{% endunless %}
+			</div>
+
+			{% unless settings.catalog_enabled %}
+				<div class="card-footer">
+					{% render 'price', product: card_product, discount_badge: false %}
+
+					{% liquid
+						if show_rating
+							render 'rating', product: card_product
+						endif
+					%}
+				</div>
+			{% endunless %}
+		</div>
+	</div>
+{% endif %}

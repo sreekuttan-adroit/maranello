@@ -1,0 +1,40 @@
+{% comment %}
+    Renders a page card.
+
+    Accepts:
+    - page: {Object} Page object
+    - show_excerpt: {Boolean} Show the page excerpt. Default: false
+    - card_type: {String} Optional. The type of the card (card, standard, overlay, padded).
+
+    Usage:
+    {% render 'card-page' page: page, show_excerpt: true %}
+{% endcomment %}
+
+{% liquid
+	assign card_class = ''
+	if card_type == 'card'
+		assign card_class = 'card-standard'
+	elsif card_type == 'overlay'
+		assign card_class = 'card-overlay'
+	elsif card_type == 'padded'
+		assign card_class = 'card-padded color-background-2'
+	endif
+%}
+
+{%- if page and page != empty -%}
+	<div class="card card-page {{ card_class }}">
+		<h3 class="card-heading">
+			<a href="{{ page.url }}">
+				{{ page.title | truncate: 50 | escape }}
+			</a>
+		</h3>
+
+		{%- if show_excerpt -%}
+			{%- if page.content.size > 0 -%}
+				<p class="card-caption card-caption-fullwidth rte">
+					{{ page.content | strip_html | truncatewords: 30 }}
+				</p>
+			{%- endif -%}
+		{%- endif -%}
+	</div>
+{%- endif -%}

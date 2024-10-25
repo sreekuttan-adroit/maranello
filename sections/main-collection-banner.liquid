@@ -1,0 +1,201 @@
+{% liquid
+	assign expiration_date = collection.metafields.custom.countdown | date: '%s'
+	assign now = 'now' | date: '%s'
+	assign countdown_visible = false
+
+	if expiration_date > now
+		assign countdown_visible = true
+	endif
+%}
+
+<style>
+	#shopify-section-{{ section.id }} .collection-hero-banner::after {
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0) -30%, rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}) 100%);
+	}
+</style>
+{% unless collection.handle == 'all' and settings.all_products_hero_disabled == true %}
+	<div class="color-{{ section.settings.color_scheme }}">
+		{% if template.suffix == 'brand' %}
+			<div class="page-hero page-hero-image-right">
+				<div class="container">
+					<div class="page-hero-content-wrapper">
+						<div class="page-hero-content {% if section.settings.collection_description_fullwidth %}page-hero-content-fullwidth{% endif %}">
+							{%- if section.settings.show_collection_title -%}
+								<h1 class="page-hero-heading">
+									{{ collection.title | escape }}
+								</h1>
+							{%- endif -%}
+
+							{%- if section.settings.show_collection_description and collection.description != blank -%}
+								<div class="page-hero-caption rte">
+									{{ collection.description }}
+								</div>
+							{%- endif -%}
+						</div>
+
+						{% if section.settings.show_collection_image and collection.image %}
+							<div class="page-hero-side-image">
+								<div class="card card-simple card-small">
+									<div class="card-media color-background-2">
+										{{ collection.image | image_url: width: 600 | image_tag:
+											class: 'page-hero-side-image-media',
+											widths: '160, 200, 400, 600',
+											sizes: '(min-width: 750px) 200px, 160px'
+										}}
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{% else %}
+			{% if section.settings.show_collection_image and collection.image %}
+				<div class="collection-hero-banner color-background-2">
+					<div class="container">
+						<div class="collection-hero-banner-info {% if section.settings.collection_description_fullwidth %}description-fullwidth{% endif %}">
+							<div class="collection-hero-banner-info-content">
+								{%- if section.settings.show_collection_title -%}
+									<h1 class="collection-hero-banner-heading">
+										{{ collection.title | escape }}
+									</h1>
+								{%- endif -%}
+
+								{%- if section.settings.show_collection_description and collection.description != blank -%}
+									<div class="collection-hero-banner-caption">
+										{{ collection.description }}
+									</div>
+								{%- endif -%}
+							</div>
+
+							{% if countdown_visible %}
+								<div class="collection-hero-banner-info-countdown">
+									{% render 'main-collection-banner-countdown', expiration_date: expiration_date %}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					{{ collection.image | image_url: width: 2200 | image_tag:
+						class: 'collection-hero-banner-media',
+						widths: '360, 375, 768, 1080, 1170, 1280, 1500, 1920, 2200',
+						sizes: '100vw',
+						fetchpriority: 'high'
+					}}
+				</div>
+			{% else %}
+				<div class="page-hero	{% if countdown_visible %}page-hero-element-right{% endif %}">
+					<div class="container">
+						<div class="page-hero-content-wrapper">
+							<div class="page-hero-content {% if section.settings.collection_description_fullwidth %}page-hero-content-fullwidth{% endif %}">
+								{%- if section.settings.show_collection_title -%}
+									<h1 class="page-hero-heading">
+										{{ collection.title | escape }}
+									</h1>
+								{%- endif -%}
+
+								{%- if section.settings.show_collection_description and collection.description != blank -%}
+									<div class="page-hero-caption rte">
+										{{ collection.description }}
+									</div>
+								{%- endif -%}
+
+								{% if collection.handle == 'all' and settings.all_products_hero_description != blank %}
+									<div class="page-hero-caption rte">
+										{{ settings.all_products_hero_description }}
+									</div>
+								{% endif %}
+							</div>
+
+							{% if countdown_visible %}
+								<div class="page-hero-element-side">
+									{% render 'main-collection-banner-countdown', expiration_date: expiration_date %}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
+	</div>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "t:sections.main_collection_banner.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main_collection_banner.settings.paragraph_1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_title",
+      "default": true,
+      "label": "t:sections.main_collection_banner.settings.show_collection_title.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "t:sections.main_collection_banner.settings.show_collection_description.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "default": true,
+      "label": "t:sections.main_collection_banner.settings.show_collection_image.label",
+      "info": "t:sections.main_collection_banner.settings.show_collection_image.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_description_fullwidth",
+      "default": false,
+      "label": "t:sections.main_collection_banner.settings.collection_description_fullwidth.label",
+      "info": "t:sections.main_collection_banner.settings.collection_description_fullwidth.info"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "t:sections.all.gradient.overlay_opacity.label",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.colors.heading"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.color_scheme.label",
+      "default": "background-1",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "accent-3",
+          "label": "t:sections.all.colors.accent_3.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
